@@ -1,0 +1,13 @@
+.box {
+    box-shadow: 5px 5px 8px 5px #00000008;
+    border-radius: 8px;
+    padding: 0.5em;
+}
+.icon {
+    background-image: url("../assets/img/icon-bili.svg");
+    width: 140px;
+    height: 64px;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
