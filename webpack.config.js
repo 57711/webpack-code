@@ -1,4 +1,6 @@
 const path = require('path')
+const ESLintPlugin = require('eslint-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
     entry: './src/main.js',
@@ -43,9 +45,24 @@ module.exports = {
                 generator: {
                     filename: 'static/images/[hash:10][ext][query]',
                   }
+            },
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader',
+                // options: {
+                //     presets: ['@babel/preset-env'],
+                // },
             }
         ],
     },
-    plugins: [],
+    plugins: [
+        new ESLintPlugin({
+            context: path.resolve(__dirname, 'src'),
+        }),
+        new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, 'public/index.html'),
+        }),
+    ],
     mode: 'development',
 }
