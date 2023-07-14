@@ -1,6 +1,33 @@
 const path = require('path')
 const ESLintPlugin = require('eslint-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+
+function getStyleLoader (pre){
+    return [
+        // 'style-loader', // insert css to html by <script>
+        MiniCssExtractPlugin.loader,
+        'css-loader', // load and compile css into cjs module
+        {
+            loader: "postcss-loader",
+            options: {
+                postcssOptions: {
+                    plugins: [
+                        [
+                            "postcss-preset-env",
+                            // "cssnano",
+                            {
+                                // Options
+                            },
+                        ],
+                    ],
+                },
+            },
+        },
+        pre,
+    ].filter(Boolean)
+}
 
 module.exports = {
     entry: './src/main.js',
@@ -13,26 +40,15 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/,
-                use: [
-                    'style-loader', // insert css to html by <script>
-                    'css-loader', // load and compile css into cjs module
-                ],
+                use: getStyleLoader(),
             },
             // {
             //     test: /\.less$/,
-            //     use: [
-            //         'style-loader',
-            //         'css-loader',
-            //         'less-loader',
-            //     ],
+            //     use: getStyleLoader('less-loader'),
             // },
             // {
             //     test: /\.s[ac]ss$/,
-            //     use: [
-            //         'style-loader',
-            //         'css-loader',
-            //         'sass-loader',
-            //     ],
+            //     use: getStyleLoader('sass-loader'),
             // },
             {
                 test: /\.(png|jpe?g|gif|webp|svg)$/,
@@ -44,7 +60,7 @@ module.exports = {
                 },
                 generator: {
                     filename: 'static/images/[hash:10][ext][query]',
-                  }
+                }
             },
             {
                 test: /\.js$/,
@@ -63,6 +79,11 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'public/index.html'),
         }),
+        new MiniCssExtractPlugin({
+            filename: "css/[name].[chunkhash:10].css"
+        }),
+        new CssMinimizerPlugin(),
     ],
     mode: 'development',
+    devServer: {},
 }
