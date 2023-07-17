@@ -85,5 +85,10 @@ module.exports = {
         new CssMinimizerPlugin(),
     ],
     mode: 'development',
-    devServer: {},
+    devServer: {
+        port: 8088,
+        open: true,
+        hot: true,
+    },
+    devtool: 'eval-cheap-module-source-map'
 }
